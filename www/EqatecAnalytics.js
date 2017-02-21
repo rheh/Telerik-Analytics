@@ -12,11 +12,11 @@
    {{#crossLink "EqatecAnalytics.Factory/CreateMonitorWithSettings"}}Factory.CreateMonitorWithSettings{{/crossLink}}<br/>
    {{#crossLink "EqatecAnalytics.Factory/CreateSettings"}}Factory.CreateSettings{{/crossLink}}<br/>
    {{#crossLink "EqatecAnalytics.Monitor/Start"}}Monitor.Start{{/crossLink}}<br/>
-  
+
       // Create the monitor instance using the unique product key
       // You should add this snippet to your application's startup code somewhere
       var productId = "YOUR-PRODUCT-KEY-HERE";
-      var factory = window.plugins.EqatecAnalytics.Factory;       
+      var factory = window.plugins.EqatecAnalytics.Factory;
       var settings = factory.CreateSettings(productId);
       settings.LoggingInterface = factory.CreateTraceLogger(); // please log
       factory.CreateMonitorWithSettings(settings,
@@ -32,7 +32,7 @@
         });
 
       ....
-      
+
       // Elsewhere in your code you can further use the Analytics API to track app's usage
       // EXAMPLE BEGIN
       var mon = window.plugins.EqatecAnalytics.Monitor;
@@ -50,7 +50,7 @@
         mon.TrackExceptionMessage(ex, "Image processing failed for " + folder.name);
       }
       // EXAMPLE END
-        
+
  * @module EqatecAnalytics
  */
 
@@ -74,7 +74,7 @@ var iceniumPluginVersion = "3.3.1";
 
 /**
  * Create the EqatecAnalytics monitor.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Factory
  * @method CreateMonitor
@@ -108,13 +108,13 @@ AnalyticsMonitorFactory.prototype.CreateMonitor = function(productId, version, s
 
 /**
  * Create the EqatecAnalytics monitor with more detailed settings.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Factory
  * @method CreateMonitorWithSettings
  * @param {Object} settings Detailed settings, created by {{#crossLink "EqatecAnalytics.Factory/CreateSettings"}}Factory.CreateSettings{{/crossLink}}:
        @param {String} settings.ProductId The numeric product id, e.g. "B568811797BD4419B50631716F0359AD"
-       @param {String} settings.Version An optional application version, e.g. "1.2.3"; if null or empty, the app version will be deduced automatically 
+       @param {String} settings.Version An optional application version, e.g. "1.2.3"; if null or empty, the app version will be deduced automatically
        @param {Object} settings.LocationCoordinates Use this for geolocation. It has these two members:
            @param {Number} settings.LocationCoordinates.Latitude The latitude
            @param {Number} settings.LocationCoordinates.Longitude The longitude
@@ -173,7 +173,7 @@ AnalyticsMonitorFactory.prototype.CreateMonitorWithSettings = function(settings,
     }
     settings.LoggingInterface.LogMessage("Telerik Analytics Monitor: Logging enabled (plugin version " + iceniumPluginVersion + ")");
   }
-  
+
   // Sanitize the settings-object because invalid data may cause cordova to crash hard (eg SIGSEGV on iOS)
   if (settings) {
     // Make sure at least one property is set, as empty objects make cordova crash
@@ -184,7 +184,7 @@ AnalyticsMonitorFactory.prototype.CreateMonitorWithSettings = function(settings,
     if (proxy && !proxy.Host && !proxy.Port && !proxy.UserName && !proxy.Password)
       delete settings.ProxyConfig;
   }
-  
+
 	cordova.exec(successCallback, failureCallback, "EqatecAnalytics", "FactoryCreateMonitorWithSettings", [settings]);
 };
 
@@ -192,7 +192,7 @@ AnalyticsMonitorFactory.prototype.CreateMonitorWithSettings = function(settings,
 /**
  * Detect whether the monitor has already been created by one of the Create-methods
  * and therefore is alive and cannot be created again.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Factory
  * @method IsMonitorCreated
@@ -215,7 +215,7 @@ AnalyticsMonitorFactory.prototype.IsMonitorCreated = function(successCallback)
 
 /**
  * Create settings suitable for passing to {{#crossLink "EqatecAnalytics.Factory/CreateMonitorWithSettings"}}Factory.CreateMonitorWithSettings{{/crossLink}}.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Factory
  * @method CreateSettings
@@ -259,7 +259,7 @@ AnalyticsMonitorFactory.prototype.CreateSettings = function(productId, version)
     "LocationCoordinates": { "Latitude":0.0, "Longitude":0.0 },
     "ProxyConfig": { "Host":"", "Port":0, "UserName":"", "Password":"" },
     "LoggingInterface":null,
-    "DailyNetworkUtilizationInKB": INTEGER_MAX_VALUE, 
+    "DailyNetworkUtilizationInKB": INTEGER_MAX_VALUE,
     "MaxStorageSizeInKB": INTEGER_MAX_VALUE,
     "ServerUri": "http://" + productId.replace("-", "") + ".monitor-eqatec.com/",
     "StorageSaveInterval": 60,
@@ -275,7 +275,7 @@ AnalyticsMonitorFactory.prototype.CreateSettings = function(productId, version)
  * own logger and pass it along in the settings when creating a monitor using
  * {{#crossLink "EqatecAnalytics.Factory/CreateMonitorWithSettings"}}Factory.CreateMonitorWithSettings{{/crossLink}} or you can use
  * this one, which will output to the standard console.log.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Factory
  * @method CreateTraceLogger
@@ -288,7 +288,7 @@ AnalyticsMonitorFactory.prototype.CreateSettings = function(productId, version)
       settings.LoggingInterface = factory.CreateTraceLogger(); // please log
       factory.CreateMonitorWithSettings(settings,
         function() { console.log("Monitor created"); },
-        function(msg) { console.log("Error creating monitor: " + msg); }); 
+        function(msg) { console.log("Error creating monitor: " + msg); });
  */
 AnalyticsMonitorFactory.prototype.CreateTraceLogger = function()
 {
@@ -365,7 +365,7 @@ AnalyticsMonitor.prototype.Stop = function(successCallback)
  * attempted to deliver the data again on the next start of the monitor with
  * the same product id.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method StopWithTimeout
@@ -386,7 +386,7 @@ AnalyticsMonitor.prototype.StopWithTimeout = function(waitForCompletionInSeconds
 /**
  * Track an exception with a context message. Delivers the exception
  * information to the server as soon as possible.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackExceptionMessage
@@ -429,9 +429,9 @@ AnalyticsMonitor.prototype.TrackExceptionMessage = function(exception, message)
  * dot-notation for feature naming to allow for better grouping of related
  * features. Tracked features are not delivered to the server immediately
  * but are piggy-backed on the next delivery.
- * 
+ *
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackFeature
@@ -444,7 +444,7 @@ AnalyticsMonitor.prototype.TrackFeature = function(featureName)
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorTrackFeature",	[featureName]);
 };
 
-		
+
 /**
  * Start time tracking of a named feature. Note that the timing is not
  * recorded before a matching TrackFeatureStop has been called and that
@@ -452,7 +452,7 @@ AnalyticsMonitor.prototype.TrackFeature = function(featureName)
  * feature so multiple start calls without a matching stop for the same
  * feature will have no effect.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackFeatureStart
@@ -476,12 +476,12 @@ AnalyticsMonitor.prototype.TrackFeatureStart = function(featureName)
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorTrackFeatureStart", [featureName]);
 };
 
-		
+
 /**
  * Stop time tracking of a named feature. Note that this has no effect if
  * there has not been a matching TrackFeatureStart.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackFeatureStop
@@ -512,7 +512,7 @@ AnalyticsMonitor.prototype.TrackFeatureStop = function(featureName)
  * expected such as an exception occurring or the user canceling the
  * activity.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackFeatureCancel
@@ -536,13 +536,13 @@ AnalyticsMonitor.prototype.TrackFeatureCancel = function(featureName)
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorTrackFeatureCancel", [featureName]);
 };
 
-			  
+
 /**
  * Track a value associated with a feature name. This tracking will
  * associate the given value with the feature and allow you to inspect e.g.
  * the distribution of value server side
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method TrackFeatureValue
@@ -556,7 +556,7 @@ AnalyticsMonitor.prototype.TrackFeatureValue = function(featureName, trackedValu
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorTrackFeatureValue", [featureName, trackedValue]);
 };
 
-		
+
 /**
  * Explicitly force a synchronization of the current information with the
  * analytics server. This call is not expected to be used in a standard
@@ -577,11 +577,11 @@ AnalyticsMonitor.prototype.ForceSync = function()
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorForceSync", []);
 };
 
-		
+
 /**
  * Associate an installation ID with the current monitor and current session.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method SetInstallationInfo
@@ -594,19 +594,19 @@ AnalyticsMonitor.prototype.SetInstallationInfo = function(installationId)
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorSetInstallationInfo", [installationId]);
 };
 
-		
+
 /**
  * Associate an installation ID with the current monitor and allows for further
  * installation properties to be associated with the current session.
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method SetInstallationInfoAndProperties
  * @param installationID any given string that would suitably identify the installation
  * @param installationProperties a JSON object with key-value pairs to register for this installation and this session
  * @example
-        window.plugins.EqatecAnalytics.Monitor.SetInstallationInfo(user.id, 
+        window.plugins.EqatecAnalytics.Monitor.SetInstallationInfo(user.id,
           { name:user.name,
             company:account.company,
             license:account.license,
@@ -617,10 +617,10 @@ AnalyticsMonitor.prototype.SetInstallationInfoAndProperties = function(installat
 	cordova.exec(null, null, "EqatecAnalytics", "MonitorSetInstallationInfoAndProperties", [installationId, installationProperties]);
 };
 
- 
+
 /**
  * The monitor must have been created prior to this call using a Factory.Create method.
- * 
+ *
  * @namespace EqatecAnalytics
  * @for Monitor
  * @method GetStatus
@@ -934,6 +934,10 @@ module.exports = EqatecAnalytics;
                     var target = e.currentTarget, rel, href, text, feature,
                         isBack = target.hash === "#:back",
                         view = kendo.widgetInstance($(target).closest(".km-view"), kendo.mobile.ui);
+
+                    if (!view) {
+                      return;
+                    }
 
                     if (target && (view.trackingEnabled || isBack)) {
                         feature = target.getAttribute("data-track-feature");
